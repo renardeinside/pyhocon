@@ -14,7 +14,7 @@ HOCON parser for Python
 
 ## Difference from base
 This repo is fork of [this repo](https://github.com/chimpler/pyhocon)
-Difference in option `HOCONConverter.to_hocon(text_substitutions)`.
+Difference in option `HOCONConverter.to_hocon(config,text_substitutions=True)`.
 For example we have this configuration:
 ```
 parameter = ${source.parameter1}
@@ -25,7 +25,11 @@ With setup `text_substitutions=False` you will have in text output:
 ```
 parameter = [ConfigValues: [ConfigSubstitution: source.parameter1]]
 parameter2 = [ConfigValues: [ConfigSubstitution: source.step1.parameter1]]
-
+```
+And with `text_substitutions=True` you will got expected output:
+```
+parameter = ${source.parameter1}
+parameter2 = ${source.step1.parameter1}
 ```
 So it's a small fix for this problem.
 
