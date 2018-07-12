@@ -14,6 +14,7 @@ HOCON parser for Python
 
 ## Difference from base
 This repo is fork of [this repo](https://github.com/chimpler/pyhocon)
+
 Difference in option `HOCONConverter.to_hocon(config,text_substitutions=True)`.
 For example we have this configuration:
 ```
