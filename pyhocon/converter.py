@@ -1,7 +1,7 @@
 import sys
 
 from pyhocon import ConfigFactory
-from pyhocon.config_tree import ConfigTree
+from pyhocon.config_tree import ConfigTree,ConfigValues
 from pyhocon.config_tree import NoneValue
 
 try:
@@ -59,7 +59,7 @@ class HOCONConverter(object):
         return lines
 
     @classmethod
-    def to_hocon(cls, config, compact=False, indent=2, level=0):
+    def to_hocon(cls, config, compact=False, indent=2, level=0,text_substitutions=True):
         """Convert HOCON input into a HOCON output
 
         :return: JSON string representation
@@ -109,6 +109,14 @@ class HOCONConverter(object):
                 lines = '"""{value}"""'.format(value=config)  # multilines
             else:
                 lines = '"{value}"'.format(value=config.replace('\n', '\\n').replace('"', '\\"'))
+        elif isinstance( config, ConfigValues ):
+            if text_substitutions:
+                bet_lines = []
+                for substitution in config.get_substitutions():
+                    bet_lines.append( "${%s}" % substitution.variable )
+                lines += '\n'.join( bet_lines )
+            else:
+                lines = str( config )
         elif config is None or isinstance(config, NoneValue):
             lines = 'null'
         elif config is True:

@@ -119,6 +119,13 @@ class TestHOCONConverter(object):
             a.b = 2
         """
 
+    EXPECTED_HOCON_WITH_SUBS = """
+    parameter = ${source.parameter1}
+    parameter2 = ${source.step1.parameter1}
+    """
+
+    CONFIG_STRING_WITH_SUBSTITUTIONS = ConfigFactory.parse_string( EXPECTED_HOCON_WITH_SUBS, resolve=False )
+
     def test_to_json(self):
         converted = HOCONConverter.to_json(TestHOCONConverter.CONFIG)
         assert [line.strip() for line in TestHOCONConverter.EXPECTED_JSON.split('\n') if line.strip()]\
@@ -138,6 +145,11 @@ class TestHOCONConverter(object):
         converted = HOCONConverter.to_hocon(TestHOCONConverter.CONFIG)
         assert [line.strip() for line in TestHOCONConverter.EXPECTED_HOCON.split('\n') if line.strip()]\
             == [line.strip() for line in converted.split('\n') if line.strip()]
+
+        converted_with_substitutions = HOCONConverter.to_hocon( TestHOCONConverter.CONFIG_STRING_WITH_SUBSTITUTIONS )
+
+        assert [line.strip() for line in TestHOCONConverter.EXPECTED_HOCON_WITH_SUBS.split( '\n' ) if line.strip()] \
+               == [line.strip() for line in converted_with_substitutions.split( '\n' ) if line.strip()]
 
     def test_to_compact_hocon(self):
         converted = HOCONConverter.to_hocon(TestHOCONConverter.CONFIG, compact=True)
